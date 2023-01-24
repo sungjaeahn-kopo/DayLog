@@ -1,14 +1,15 @@
 import React, {useContext} from 'react';
-import {StyleSheet, TextInput, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import LogContext from '../contexts/LogContext';
+import FeedList from '../FeedList';
 import FloatingWriteButton from '../FloatingWriteButton';
 
 function FeedsScreen() {
   const {logs} = useContext(LogContext);
-  console.log(JSON.stringify(logs, null, 2));
 
   return (
     <View style={styles.block}>
+      <FeedList logs={logs} />
       <FloatingWriteButton />
     </View>
   );

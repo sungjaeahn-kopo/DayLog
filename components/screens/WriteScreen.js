@@ -21,7 +21,7 @@ function WriteScreen() {
       title,
       body,
       // 날짜를 문자로 변환
-      date: new Date().toISOString,
+      date: new Date().toISOString(),
     });
     navigation.pop();
   };
