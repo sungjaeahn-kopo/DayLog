@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import React, {useContext, useState} from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -7,17 +8,30 @@ import {
 } from 'react-native';
 import WriteEditor from '../WriteEditor';
 import WriteHeader from '../WriteHeader';
+import LogContext from '../contexts/LogContext';
 
 function WriteScreen() {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const navigation = useNavigation();
+
+  const {onCreate} = useContext(LogContext);
+  const onSave = () => {
+    onCreate({
+      title,
+      body,
+      // 날짜를 문자로 변환
+      date: new Date().toISOString,
+    });
+    navigation.pop();
+  };
 
   return (
     <SafeAreaView style={styles.block}>
       <KeyboardAvoidingView
         style={styles.avoidingView}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <WriteHeader />
+        <WriteHeader onSave={onSave} />
         <WriteEditor
           title={title}
           body={body}
