@@ -1,5 +1,5 @@
 import {add, format} from 'date-fns';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useMemo, useState} from 'react';
 import CalendarView from '../CalendarView';
 import LogContext from '../contexts/LogContext';
 import FeedList from '../FeedList';
@@ -11,11 +11,16 @@ function CalendarScreen() {
     format(new Date(), 'yyyy-MM-dd'),
   );
 
-  const markedDates = logs.reduce((acc, current) => {
-    const formattedDate = format(new Date(current.date), 'yyyy-MM-dd');
-    acc[formattedDate] = {marked: true};
-    return acc;
-  }, {});
+  // useMemo >> Log 배열이 바뀔때에만 reduce 실행
+  const markedDates = useMemo(
+    () =>
+      logs.reduce((acc, current) => {
+        const formattedDate = format(new Date(current.date), 'yyyy-MM-dd');
+        acc[formattedDate] = {marked: true};
+        return acc;
+      }, {}),
+    [logs],
+  );
 
   const filteredLogs = logs.filter(
     log => format(new Date(log.date), 'yyyy-MM-dd') === selectedDate,
