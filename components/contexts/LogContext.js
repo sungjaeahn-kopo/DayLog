@@ -4,6 +4,7 @@ import {v4 as uuidv4} from 'uuid';
 
 const LogContext = createContext();
 
+// 더미데이터 생성
 export function LogContextProvider({children}) {
   const [logs, setLogs] = useState(
     Array.from({length: 10})
@@ -16,6 +17,12 @@ export function LogContextProvider({children}) {
       .reverse(),
   );
 
+  const onModify = modified => {
+    // logs 배열을 순회해 id가 일치하면 log를 교체하고 그렇지 않으면 유지
+    const nextLogs = logs.map(log => (log.id === modified.id ? modified : log));
+    setLogs(nextLogs);
+  };
+
   const onCreate = ({title, body, date}) => {
     const log = {
       id: uuidv4(),
@@ -26,8 +33,13 @@ export function LogContextProvider({children}) {
     setLogs([log, ...logs]);
   };
 
+  const onRemove = id => {
+    const nextLogs = logs.filter(log => log.id !== id);
+    setLogs(nextLogs);
+  };
+
   return (
-    <LogContext.Provider value={{logs, onCreate}}>
+    <LogContext.Provider value={{logs, onCreate, onModify, onRemove}}>
       {children}
     </LogContext.Provider>
   );

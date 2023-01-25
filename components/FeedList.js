@@ -4,11 +4,18 @@ import FeedListItem from './FeedListItem';
 
 function FeedList({logs, onScrolledToBottom}) {
   const onScroll = e => {
+    if (!onScrolledToBottom) {
+      return;
+    }
+
     const {contentSize, layoutMeasurement, contentOffset} = e.nativeEvent;
     const distanceFromBottom =
       contentSize.height - layoutMeasurement.height - contentOffset.y;
 
-    if (distanceFromBottom < 72) {
+    if (
+      contentSize.height > layoutMeasurement.height &&
+      distanceFromBottom < 72
+    ) {
       // 바닥과 가까워짐
       onScrolledToBottom(true);
     } else {
